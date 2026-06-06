@@ -1,16 +1,39 @@
-// src/components/ui/Input.jsx
+import { useState } from 'react'
+
 export default function Input({
   id,
   label,
   type = 'text',
   value,
   onChange,
+  onBlur,
   placeholder,
   error,
   required = false,
   className = '',
+  validate,
   ...props
 }) {
+  const [touched, setTouched] = useState(false)
+  const [internalError, setInternalError] = useState('')
+
+  const handleChange = (e) => {
+    onChange?.(e)
+    if (validate && touched) {
+      setInternalError(validate(e.target.value) || '')
+    }
+  }
+
+  const handleBlur = (e) => {
+    setTouched(true)
+    onBlur?.(e)
+    if (validate) {
+      setInternalError(validate(e.target.value) || '')
+    }
+  }
+
+  const displayError = error || (touched ? internalError : '')
+
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
       {label && (
@@ -26,25 +49,26 @@ export default function Input({
         id={id}
         type={type}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
+        onBlur={handleBlur}
         placeholder={placeholder}
-        aria-describedby={error ? `${id}-error` : undefined}
-        aria-invalid={!!error}
+        aria-describedby={displayError ? `${id}-error` : undefined}
+        aria-invalid={!!displayError}
         className={`
           bg-inner border rounded-sm px-4 py-3
           text-text-primary placeholder-text-muted text-sm
-          transition-hover focus:outline-none
-          ${error
-            ? 'border-red-400 focus:border-red-400'
+          transition-hover focus:outline-none min-h-[48px]
+          ${displayError
+            ? 'border-red-400 focus:border-red-400 focus:shadow-[0_0_12px_rgba(255,68,68,0.4)]'
             : 'border-border focus:border-accent-cyan focus:shadow-focus-cyan'
           }
         `}
         {...props}
       />
 
-      {error && (
-        <p id={`${id}-error`} className="text-red-400 text-xs font-mono" role="alert">
-          {error}
+      {displayError && (
+        <p id={`${id}-error`} className="text-red-400 text-xs font-mono animate-fade" role="alert">
+          {displayError}
         </p>
       )}
     </div>

@@ -1,9 +1,12 @@
-// src/components/ui/Button.jsx
+import React from 'react';
+import Spinner from './Spinner';
+
 export default function Button({
   children,
   variant = 'primary',
   type = 'button',
   disabled = false,
+  loading = false,
   className = '',
   onClick,
   ...props
@@ -25,11 +28,12 @@ export default function Button({
   return (
     <button
       type={type}
-      disabled={disabled}
+      disabled={disabled || loading}
       onClick={onClick}
-      className={`${base} ${variants[variant]} ${className}`}
+      className={`${base} ${variants[variant] || variants.primary} ${className}`}
       {...props}
     >
+      {loading && <Spinner size="sm" className="mr-2" />}
       {children}
     </button>
   )

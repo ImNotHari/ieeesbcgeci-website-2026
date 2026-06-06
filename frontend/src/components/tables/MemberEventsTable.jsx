@@ -17,8 +17,11 @@ export default function MemberEventsTable({ events, onEdit, onDelete, onView }) 
   const closeMenu = () => setContextMenu(null)
 
   return (
-    <div className="bg-bg-card border border-border-subtle rounded-panel overflow-hidden shadow-lg">
+    <div className="bg-bg-card border border-border-subtle rounded-card overflow-hidden animate-fadeIn">
       <div className="overflow-x-auto">
+        <div className="md:hidden text-text-muted font-mono text-[10px] text-right p-2 bg-bg-deeper border-b border-border-subtle uppercase tracking-widest">
+          👉 Scroll right to see more
+        </div>
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-bg-deeper border-b border-border-subtle">

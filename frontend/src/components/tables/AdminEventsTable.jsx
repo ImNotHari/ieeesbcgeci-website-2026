@@ -63,8 +63,11 @@ export default function AdminEventsTable() {
         </div>
       )}
 
-      <div className="bg-card border border-border rounded-sm overflow-hidden">
+      <div className="bg-card border border-border rounded-sm overflow-hidden animate-fadeIn">
         <div className="overflow-x-auto">
+          <div className="md:hidden text-text-muted font-mono text-[10px] text-right p-2 bg-inner border-b border-border uppercase tracking-widest">
+            👉 Scroll right to see more
+          </div>
           <table className="w-full text-sm" role="grid">
             <thead>
               <tr className="border-b border-border">

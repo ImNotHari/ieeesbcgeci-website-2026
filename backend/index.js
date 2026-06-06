@@ -23,6 +23,10 @@ app.use('/api/events', eventRoutes);
 const memberEventRoutes = require('./routes/memberEventRoutes');
 app.use('/api/member/events', memberEventRoutes);
 
+// Public Routes (Phase 5)
+const publicRoutes = require('./routes/publicRoutes');
+app.use('/api/public', publicRoutes);
+
 app.get('/api/health', (req, res) => {
   res.json({ success: true, data: { status: 'ok' }, message: 'Server is running' });
 });

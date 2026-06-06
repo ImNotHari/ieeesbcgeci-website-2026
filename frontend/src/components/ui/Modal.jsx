@@ -1,14 +1,43 @@
-// src/components/ui/Modal.jsx
 import { useEffect, useRef } from 'react'
 
 export default function Modal({ isOpen, onClose, title, children, width = 'max-w-lg' }) {
   const modalRef = useRef(null)
 
   useEffect(() => {
-    const handleKey = (e) => { if (e.key === 'Escape') onClose() }
+    const handleKey = (e) => { 
+      if (e.key === 'Escape') onClose() 
+    }
     if (isOpen) document.addEventListener('keydown', handleKey)
     return () => document.removeEventListener('keydown', handleKey)
   }, [isOpen, onClose])
+
+  // Focus trap
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'Tab') {
+        const focusableElements = modalRef.current?.querySelectorAll(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        )
+        if (!focusableElements || focusableElements.length === 0) return
+
+        const firstElement = focusableElements[0]
+        const lastElement = focusableElements[focusableElements.length - 1]
+
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault()
+          lastElement.focus()
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault()
+          firstElement.focus()
+        }
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen])
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : ''
@@ -19,7 +48,7 @@ export default function Modal({ isOpen, onClose, title, children, width = 'max-w
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fadeIn"
       style={{ backgroundColor: 'rgba(0,0,0,0.7)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
       role="dialog"
@@ -29,8 +58,8 @@ export default function Modal({ isOpen, onClose, title, children, width = 'max-w
       <div
         ref={modalRef}
         className={`
-          ${width} w-full bg-card border border-border
-          rounded-lg p-8 max-h-[90vh] overflow-y-auto
+          ${width} w-[calc(100%-2rem)] bg-card border border-border
+          rounded-lg p-6 sm:p-8 max-h-[90vh] overflow-y-auto animate-slideInUp
         `}
       >
         <div className="flex items-center justify-between mb-6">
@@ -40,7 +69,7 @@ export default function Modal({ isOpen, onClose, title, children, width = 'max-w
           <button
             onClick={onClose}
             aria-label="Close modal"
-            className="text-text-muted hover:text-text-primary transition-hover min-h-[48px] min-w-[48px] flex items-center justify-center"
+            className="text-text-muted hover:text-text-primary transition-hover min-h-[48px] min-w-[48px] flex items-center justify-center -mr-2"
           >
             ✕
           </button>
