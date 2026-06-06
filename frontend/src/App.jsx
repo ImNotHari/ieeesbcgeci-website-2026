@@ -10,6 +10,9 @@ import AdminDashboard from './pages/admin/Dashboard';
 import AdminMembers from './pages/admin/Members';
 import AdminEvents from './pages/admin/Events';
 
+import MemberDashboard from './pages/member/Dashboard';
+import MemberProfile from './pages/member/Profile';
+
 function App() {
   return (
     <Router>
@@ -48,9 +51,8 @@ function App() {
         {/* Protected Member Routes */}
         <Route element={<MemberRoutes />}>
           <Route element={<MemberLayout />}>
-            <Route path="/dashboard" element={<div className="p-8"><h1 className="text-2xl font-bold">Member Dashboard</h1><p className="mt-4">Welcome to the member area.</p></div>} />
-            <Route path="/dashboard/events" element={<div className="p-8"><h1 className="text-2xl font-bold">My Events</h1></div>} />
-            <Route path="/dashboard/profile" element={<div className="p-8"><h1 className="text-2xl font-bold">My Profile</h1></div>} />
+            <Route path="/dashboard" element={<MemberDashboard />} />
+            <Route path="/dashboard/profile" element={<MemberProfile />} />
           </Route>
         </Route>
 
