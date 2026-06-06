@@ -6,6 +6,10 @@ import MemberRoutes from './routes/MemberRoutes';
 import AdminLayout from './layouts/AdminLayout';
 import MemberLayout from './layouts/MemberLayout';
 
+import AdminDashboard from './pages/admin/Dashboard';
+import AdminMembers from './pages/admin/Members';
+import AdminEvents from './pages/admin/Events';
+
 function App() {
   return (
     <Router>
@@ -35,9 +39,9 @@ function App() {
         {/* Protected Admin Routes */}
         <Route element={<AdminRoutes />}>
           <Route element={<AdminLayout />}>
-            <Route path="/admin" element={<div className="p-8"><h1 className="text-2xl font-bold">Admin Dashboard</h1><p className="mt-4">Welcome to the admin area.</p></div>} />
-            <Route path="/admin/members" element={<div className="p-8"><h1 className="text-2xl font-bold">Manage Members</h1></div>} />
-            <Route path="/admin/events" element={<div className="p-8"><h1 className="text-2xl font-bold">Manage Events</h1></div>} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/members" element={<AdminMembers />} />
+            <Route path="/admin/events" element={<AdminEvents />} />
           </Route>
         </Route>
 

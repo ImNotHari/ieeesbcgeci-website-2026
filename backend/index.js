@@ -11,6 +11,14 @@ app.use(express.json());
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
+// Members Routes (Phase 3)
+const memberRoutes = require('./routes/memberRoutes');
+app.use('/api/members', memberRoutes);
+
+// Events Routes (Phase 3)
+const eventRoutes = require('./routes/eventRoutes');
+app.use('/api/events', eventRoutes);
+
 app.get('/api/health', (req, res) => {
   res.json({ success: true, data: { status: 'ok' }, message: 'Server is running' });
 });
