@@ -1,19 +1,57 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import Login from './pages/Login';
+import AdminRoutes from './routes/AdminRoutes';
+import MemberRoutes from './routes/MemberRoutes';
+import AdminLayout from './layouts/AdminLayout';
+import MemberLayout from './layouts/MemberLayout';
 
 function App() {
   return (
     <Router>
-      <Toaster position="bottom-right" />
-      {/* TODO Phase 2: Add AuthGuard wrapper around /admin and /dashboard routes */}
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 3500,
+          style: {
+            background: '#1A1F3A',
+            color: '#FFFFFF',
+            border: '1px solid #2A2E4A',
+            borderRadius: '8px',
+            fontFamily: 'Arial, sans-serif',
+            fontSize: '14px',
+          },
+          success: { iconTheme: { primary: '#00D9FF', secondary: '#0A0E1A' } },
+          error: { iconTheme: { primary: '#FF4444', secondary: '#FFFFFF' } },
+        }}
+      />
+      
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<div className="p-8"><h1 className="text-3xl font-bold">Home Page</h1></div>} />
+        <Route path="/" element={<div className="p-8"><h1 className="text-3xl font-bold">Home Page</h1><a href="/login" className="text-accent-cyan hover:underline mt-4 inline-block">Login</a></div>} />
         <Route path="/about" element={<div className="p-8"><h1>About Us</h1></div>} />
+        <Route path="/login" element={<Login />} />
         
-        {/* Protected Routes (Phase 2 & 3) */}
-        <Route path="/admin" element={<div className="p-8"><h1>Admin Dashboard</h1></div>} />
-        <Route path="/dashboard" element={<div className="p-8"><h1>Member Dashboard</h1></div>} />
+        {/* Protected Admin Routes */}
+        <Route element={<AdminRoutes />}>
+          <Route element={<AdminLayout />}>
+            <Route path="/admin" element={<div className="p-8"><h1 className="text-2xl font-bold">Admin Dashboard</h1><p className="mt-4">Welcome to the admin area.</p></div>} />
+            <Route path="/admin/members" element={<div className="p-8"><h1 className="text-2xl font-bold">Manage Members</h1></div>} />
+            <Route path="/admin/events" element={<div className="p-8"><h1 className="text-2xl font-bold">Manage Events</h1></div>} />
+          </Route>
+        </Route>
+
+        {/* Protected Member Routes */}
+        <Route element={<MemberRoutes />}>
+          <Route element={<MemberLayout />}>
+            <Route path="/dashboard" element={<div className="p-8"><h1 className="text-2xl font-bold">Member Dashboard</h1><p className="mt-4">Welcome to the member area.</p></div>} />
+            <Route path="/dashboard/events" element={<div className="p-8"><h1 className="text-2xl font-bold">My Events</h1></div>} />
+            <Route path="/dashboard/profile" element={<div className="p-8"><h1 className="text-2xl font-bold">My Profile</h1></div>} />
+          </Route>
+        </Route>
+
+        {/* Fallback */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );
