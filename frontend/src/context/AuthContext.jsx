@@ -53,18 +53,23 @@ export function AuthProvider({ children }) {
   };
 
   const login = async (email, password) => {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`,
-      { email, password }
-    );
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/login`,
+        { email, password }
+      );
 
-    if (res.data.success) {
-      const { access_token, user: userData } = res.data.data;
-      setUser({ ...userData, access_token });
-      return { success: true, role: userData.role };
+      if (res.data.success) {
+        const { access_token, user: userData } = res.data.data;
+        setUser({ ...userData, access_token });
+        return { success: true, role: userData.role };
+      }
+
+      return { success: false, error: res.data.error };
+    } catch (err) {
+      const errorMessage = err.response?.data?.error || err.message || 'Login failed';
+      return { success: false, error: errorMessage };
     }
-
-    return { success: false, error: res.data.error };
   };
 
   const logout = async () => {

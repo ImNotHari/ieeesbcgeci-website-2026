@@ -1,5 +1,6 @@
 // backend/controllers/authController.js
 const supabase = require('../db/supabaseClient');
+const { createClient } = require('@supabase/supabase-js');
 
 const login = async (req, res) => {
   try {
@@ -13,7 +14,15 @@ const login = async (req, res) => {
       });
     }
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    // Create a local client for login to avoid mutating the global service-role client
+    // and leaking sessions across requests.
+    const localSupabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY, // We can use service key here just as an API key, GoTrue doesn't care for password grant
+      { auth: { persistSession: false, autoRefreshToken: false } }
+    );
+
+    const { data, error } = await localSupabase.auth.signInWithPassword({
       email,
       password
     });
@@ -33,6 +42,7 @@ const login = async (req, res) => {
       .single();
 
     if (profileError || !profile) {
+      console.error('Profile fetch error:', profileError);
       return res.status(403).json({
         success: false,
         error: 'User profile not found. Contact administrator.',
